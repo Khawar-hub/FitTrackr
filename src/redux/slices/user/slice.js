@@ -18,6 +18,8 @@ const userSlice = createSlice({
     },
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
+      if(!action?.payload)
+      state.userMeta=null;
     },
   },
 });

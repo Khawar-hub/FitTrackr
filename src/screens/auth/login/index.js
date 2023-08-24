@@ -1,9 +1,8 @@
-import {yupResolver} from '@hookform/resolvers/yup';
-import React, {useRef, useState} from 'react';
-import {useForm} from 'react-hook-form';
-import {Image, View} from 'react-native';
-import {useDispatch} from 'react-redux';
-import {Icons} from '~assets';
+import { yupResolver } from "@hookform/resolvers/yup";
+import React, { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import {View } from "react-native";
+import { useDispatch } from "react-redux";
 import {
   Button,
   Input,
@@ -12,36 +11,74 @@ import {
   SmallText,
   Spacer,
   UnderLineText,
-} from '~components';
-import {setIsLoggedIn} from '~redux/slices/user';
-import {AppColors} from '~utils';
-import {height} from '~utils/dimensions';
-import styles from './styles';
-import LoginFormValidation from './valdiation';
-import ScreenNames from '~routes/routes';
-export default function Login({navigation}) {
+} from "~components";
+import { setIsLoggedIn, setUserMeta } from "~redux/slices/user";
+import { AppColors } from "~utils";
+import { height } from "~utils/dimensions";
+import styles from "./styles";
+import LoginFormValidation from "./valdiation";
+import ScreenNames from "~routes/routes";
+import { db } from "~index";
+import { Base64 } from "js-base64";
+import { showToast } from "~utils/method";
+export default function Login({ navigation }) {
   const dispatch = useDispatch();
   const passwordRef = useRef();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const {
     control,
     handleSubmit,
-    formState: {isValid},
+    formState: { isValid },
   } = useForm({
-    mode: 'all',
+    mode: "all",
     resolver: yupResolver(LoginFormValidation),
   });
-  const loginHandler = async () => {
-    dispatch(setIsLoggedIn(true));
+  const loginHandler = async (data) => {
+    try {
+      db.transaction((tx) => {
+        tx.executeSql(
+          "SELECT * FROM users WHERE email = ?;",
+          [data?.email],
+          (_, resultSet) => {
+            const user = resultSet.rows.item(0);
+            console.log(user);
+            if (user) {
+              const storedEncodedPassword = user?.encrypted_password; // Replace with the actual field name
+
+              // Decode the stored encoded password
+              const decodedStoredPassword = Base64.decode(
+                storedEncodedPassword
+              );
+
+              // Compare the decoded stored password with the entered password
+              if (data?.password === decodedStoredPassword) {
+                // Password matches, user is logged in
+                // Set a logged-in state and navigate the user
+                console.log("Logged in successfully.");
+                showToast("success", "Logged in successfully.", "");
+                dispatch(setUserMeta(user));
+                dispatch(setIsLoggedIn(true));
+              } else {
+                console.log("Incorrect password.");
+                showToast("error", "Incorrect Password.", "");
+              }
+            } else {
+              console.log("User not found.");
+              showToast("error", "User not found", "");
+            }
+          }
+        );
+      });
+    } catch (error) {
+      console.error("Error logging in:", error);
+    }
   };
 
   return (
     <ScreenWrapper
       statusBarColor={AppColors.primary}
-      barStyle={'light-content'}
+      barStyle={"light-content"}
       scrollEnabled
-      >
+    >
       <View style={styles.mainViewContainer}>
         <LargeText textStyles={styles.heading}>FitTrackr</LargeText>
 
@@ -53,19 +90,24 @@ export default function Login({navigation}) {
           <Input
             control={control}
             name="email"
-            keyboardType={'email-address'}
+            keyboardType={"email-address"}
             onSubmitEditing={() => passwordRef?.current?.focus()}
             returnKeyType="next"
             label="Email"
           />
           <Input
             ref={passwordRef}
-            label={'Password'}
+            label={"Password"}
             control={control}
             name="password"
             secureTextEntry
           />
-          <UnderLineText onPress={()=>navigation.navigate(ScreenNames.SIGNUPSCREEN)} color={AppColors.black} size={3.4} textAlign={'right'}>
+          <UnderLineText
+            onPress={() => navigation.navigate(ScreenNames.SIGNUPSCREEN)}
+            color={AppColors.black}
+            size={3.4}
+            textAlign={"right"}
+          >
             Sign up
           </UnderLineText>
         </View>
@@ -74,7 +116,8 @@ export default function Login({navigation}) {
           disabled={!isValid}
           buttonTextColor={AppColors.white}
           withShadow
-          onPress={handleSubmit(loginHandler)}>
+          onPress={handleSubmit(loginHandler)}
+        >
           Login
         </Button>
       </View>

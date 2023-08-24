@@ -1,6 +1,7 @@
 import React, {forwardRef, useImperativeHandle, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {DropDownMenu} from '~components';
+import { persistor } from '~redux';
 import {setIsLoggedIn, setUserMeta} from '~redux/slices/user';
 
 const SettingModal = ({}, ref) => {
@@ -26,6 +27,7 @@ const SettingModal = ({}, ref) => {
           dispatch(setUserMeta(null));
           dispatch(setIsLoggedIn(false));
         }, 600);
+     
       }}
       onPressSecondBtn={() => {}}
       onPressThirdBtn={() => {}}
