@@ -3,21 +3,15 @@ import { url } from "./urls";
 
 export const workOutApi = createApi({
   reducerPath: "workout",
-  // baseQuery: fetchBaseQuery({
-  //   prepareHeaders: (headers, { getState }) => {
-  //     const token = "Example";
-  //     if (token) {
-  //       headers.set("authorization", "Bearer " + token);
-  //     }
-  //     return headers;
-  //   },
-  // }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: url
+  }),
   tagTypes: ["WorkOut"],
   endpoints: (builder) => ({
-    getWorkOut: builder.mutation({
+    getWorkOut: builder.query({
       query: (data) => {
         return {
-          url: url + "products/1",
+          url: "products",
           method: "GET",
           body: data,
         };
@@ -25,4 +19,4 @@ export const workOutApi = createApi({
     }),
   }),
 });
-export const { useGetWorkOutMutation } = workOutApi;
+export const { useGetWorkOutQuery } = workOutApi;

@@ -13,6 +13,7 @@ import {
 } from "redux-persist";
 import EncryptedStorage from "react-native-encrypted-storage";
 import { workoutSliceReducer } from "./slices/workouts";
+import { workOutApi } from "~rtk/get-workouts-API";
 const persistConfig = {
   key: "root",
   storage: EncryptedStorage,
@@ -21,7 +22,9 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: userSliceReducer,
   config: configSliceReducer,
-  workout:workoutSliceReducer
+  workout: workoutSliceReducer,
+  [workOutApi.reducerPath]: workOutApi.reducer
+
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
@@ -31,6 +34,9 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+
+    }).concat(
+      workOutApi.middleware
+    ),
 });
 export const persistor = persistStore(store);
