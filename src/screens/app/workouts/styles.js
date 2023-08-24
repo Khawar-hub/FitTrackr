@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
   mainViewContainer: {
     flex: 1,
     backgroundColor: AppColors.white,
-    paddingVertical: height(1),
+    paddingVertical: height(2),
   },
   filter:{
     marginRight:width(6),

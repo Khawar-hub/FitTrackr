@@ -1,11 +1,12 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { AddWorkout, HomeScreen } from "~screens/app";
+import { AddWorkout, HomeScreen, WorkOuts } from "~screens/app";
 import Home from "~assets/SVG/home";
 import { AppColors } from "~utils";
 import styles from "./styles";
 import ScreenNames from "./routes";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Directory from "~assets/SVG/directory";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -38,6 +39,14 @@ export function BottomTab() {
         }}
         name="HomeStack"
         component={HomeStack}
+      />
+      <Tab.Screen
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => <Directory color={color} />,
+        }}
+        name="WorkOuts"
+        component={WorkOuts}
       />
     </Tab.Navigator>
   );

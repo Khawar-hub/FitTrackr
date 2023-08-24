@@ -23,6 +23,7 @@ import { showToast } from "~utils/method";
 import { db } from "~index";
 import { useDispatch, useSelector } from "react-redux";
 import { selectWorkout, setWorkouts } from "~redux/slices/workouts";
+import moment from "moment";
 export default function AddWorkout({ navigation }) {
   //Ref
   const reduxWorkouts = useSelector(selectWorkout);
@@ -73,7 +74,7 @@ export default function AddWorkout({ navigation }) {
   const createTableUsers = () => {
     db.transaction((tx) => {
       tx.executeSql(
-        "CREATE TABLE IF NOT EXISTS workouts (id INTEGER PRIMARY KEY AUTOINCREMENT,image TEXT, type TEXT, duration TEXT,distance TEXT,repititions TEXT);",
+        "CREATE TABLE IF NOT EXISTS workouts (id INTEGER PRIMARY KEY AUTOINCREMENT,image TEXT, type TEXT, duration TEXT,distance TEXT,repititions TEXT, createdAt INTEGER);",
         [],
         () => {
           console.log('Table "workouts" created successfully.');
@@ -98,13 +99,14 @@ export default function AddWorkout({ navigation }) {
 
         db.transaction((tx) => {
           tx.executeSql(
-            "INSERT INTO workouts (image,type, duration, distance, repititions) VALUES (?,?, ?, ?, ?);",
+            "INSERT INTO workouts (image,type, duration, distance, repititions,createdAt) VALUES (?,?, ?, ?, ?,?);",
             [
               profilePicture?.path,
               type,
               data?.duration,
               data?.distance,
               data?.repititions,
+              moment().valueOf()
             ],
             (_, resultSet) => {
               // Handle success
@@ -117,6 +119,7 @@ export default function AddWorkout({ navigation }) {
                   duration: data?.duration,
                   distance: data?.distance,
                   repititions: data?.repititions,
+                  createdAt: moment().valueOf()
                 })
               );
               showToast("success", "Workout created successfully.", "");

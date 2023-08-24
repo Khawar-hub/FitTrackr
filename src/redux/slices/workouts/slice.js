@@ -1,24 +1,22 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
- workouts:[]
+  workouts: [],
 };
 
 const workoutSlice = createSlice({
-  name: 'workout',
+  name: "workout",
   initialState,
   reducers: {
     setWorkouts: (state, action) => {
-        let temp=[...state.workouts]
-         temp.push(action.payload)
-         state.workouts=temp
-         console.log(temp);
+      let temp = [...state.workouts];
+      temp.unshift(action.payload);
+      state.workouts = temp;
+      console.log(temp);
     },
     setAllWorkout: (state, action) => {
-       state.workouts=action.payload
+      state.workouts = action.payload;
     },
-   
-   
   },
 });
 
