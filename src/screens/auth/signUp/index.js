@@ -17,11 +17,13 @@ import {setIsLoggedIn} from '~redux/slices/user';
 import {AppColors} from '~utils';
 import {height} from '~utils/dimensions';
 import styles from './styles';
-import LoginFormValidation from './valdiation';
+import LoginFormValidation, { SignUpFormValidation } from './valdiation';
 import ScreenNames from '~routes/routes';
-export default function Login({navigation}) {
+export default function SignUp({navigation}) {
   const dispatch = useDispatch();
   const passwordRef = useRef();
+  const emailRef = useRef();
+  const [name,setName]=useState('')
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const {
@@ -30,10 +32,11 @@ export default function Login({navigation}) {
     formState: {isValid},
   } = useForm({
     mode: 'all',
-    resolver: yupResolver(LoginFormValidation),
+    resolver: yupResolver(SignUpFormValidation),
   });
-  const loginHandler = async () => {
-    dispatch(setIsLoggedIn(true));
+  const signupHandler = async (data) => {
+    console.log(data);
+    // dispatch(setIsLoggedIn(true));
   };
 
   return (
@@ -47,11 +50,19 @@ export default function Login({navigation}) {
 
         <View style={styles.inputContainer}>
           <LargeText textAlign="center" size={5}>
-            Sign in to your Account
+            Create your account
           </LargeText>
           <Spacer vertical={height(2)} />
           <Input
             control={control}
+            name="name"
+            onSubmitEditing={() => emailRef?.current?.focus()}
+            returnKeyType="next"
+            label="Name"
+          />
+          <Input
+            control={control}
+            ref={emailRef}
             name="email"
             keyboardType={'email-address'}
             onSubmitEditing={() => passwordRef?.current?.focus()}
@@ -65,8 +76,15 @@ export default function Login({navigation}) {
             name="password"
             secureTextEntry
           />
-          <UnderLineText onPress={()=>navigation.navigate(ScreenNames.SIGNUPSCREEN)} color={AppColors.black} size={3.4} textAlign={'right'}>
-            Sign up
+            <Input
+            ref={passwordRef}
+            label={'Confirm Password'}
+            control={control}
+            name="confirmpassword"
+            secureTextEntry
+          />
+          <UnderLineText onPress={()=>navigation.navigate(ScreenNames.LOGIN)}  color={AppColors.black} size={3.4} textAlign={'right'}>
+            Login
           </UnderLineText>
         </View>
         <Spacer vertical={height(2)} />
@@ -74,8 +92,8 @@ export default function Login({navigation}) {
           disabled={!isValid}
           buttonTextColor={AppColors.white}
           withShadow
-          onPress={handleSubmit(loginHandler)}>
-          Login
+          onPress={handleSubmit(signupHandler)}>
+          Sign Up
         </Button>
       </View>
     </ScreenWrapper>

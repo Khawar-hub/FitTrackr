@@ -1,0 +1,15 @@
+import * as yup from 'yup'
+
+export const LoginFormValidation = yup.object().shape({
+    email: yup.string().required("Email is required.").email("Invalid Email"),
+    password: yup.string().required("Password is  required").min(6, "Password too short")
+})
+export const SignUpFormValidation = yup.object().shape({
+    name: yup.string().required("Name is required.").min(6, "Name too short"),
+    email: yup.string().required("Email is required.").email("Invalid Email"),
+    password: yup.string().required("Password is  required").min(6, "Password too short"),
+    confirmpassword: yup
+    .string()
+    .oneOf([yup.ref('password'), null], 'Passwords must match')
+    
+})
