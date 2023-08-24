@@ -1,6 +1,5 @@
 import React, { forwardRef } from "react";
 import { View } from "react-native";
-import { Controller } from "react-hook-form";
 import RNPickerSelect from "react-native-picker-select";
 import { AppColors } from "~utils";
 import styles from "./styles";

@@ -26,14 +26,9 @@ export default function Home({ navigation }) {
   const [filteredWorkouts, setFilteredWorkouts] = useState([]); // State for filtered workouts
   const reduxWorkouts = useSelector(selectWorkout);
   const [loader, setLoader] = useState(false);
-  //Ref
   const dispatch = useDispatch();
   const showSettingModalRef = useRef();
   const filterModalRef = useRef();
-
-  //States
-
-  //jsx components
   useEffect(() => {
     getWorkouts();
   }, []);
@@ -44,6 +39,7 @@ export default function Home({ navigation }) {
         tx.executeSql("SELECT * FROM workouts", [], (_, { rows }) => {
           // Process the query results and update state
           setLoader(false);
+      
           dispatch(setAllWorkout(rows.raw()));
         });
       });

@@ -3,7 +3,8 @@ const ScreenNames ={
     SIGNUPSCREEN: 'SignUp',
     HOME: 'Home',
     ADDWORKOUT:"AddWorkout",
-    WORKOUTS:"WorkOuts"
+    PRODUCTS:"Products",
+    PRODUCTDETAIL:"ProductDetail"
    
   }
   export default ScreenNames;

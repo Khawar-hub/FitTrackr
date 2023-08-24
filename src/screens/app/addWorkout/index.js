@@ -106,7 +106,7 @@ export default function AddWorkout({ navigation }) {
               data?.duration,
               data?.distance,
               data?.repititions,
-              moment().valueOf()
+              moment().valueOf(),
             ],
             (_, resultSet) => {
               // Handle success
@@ -119,7 +119,7 @@ export default function AddWorkout({ navigation }) {
                   duration: data?.duration,
                   distance: data?.distance,
                   repititions: data?.repititions,
-                  createdAt: moment().valueOf()
+                  createdAt: moment().valueOf(),
                 })
               );
               showToast("success", "Workout created successfully.", "");

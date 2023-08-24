@@ -5,20 +5,14 @@ import { useSelector } from "react-redux";
 import ScreenNames from "./routes";
 import { selectIsLoggedIn } from "~redux/slices/user";
 import { LoginScreen, SignUpScreen } from "~screens/auth";
-import { HomeScreen } from "~screens/app";
 import { Loader } from "~components";
 import SplashScreen from "react-native-splash-screen";
-import { db } from "~index";
-import { store } from "~redux";
 import { BottomTab } from "./bottomTab";
 const Stack = createNativeStackNavigator();
 
 export default function Routes() {
   useEffect(() => {
     SplashScreen.hide();
-    const persistedUserId = store.getState().user?.userMeta?.id;
-
-    console.log(persistedUserId);
   }, []);
 
   const isLogin = useSelector(selectIsLoggedIn);

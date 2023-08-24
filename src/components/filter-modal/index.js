@@ -1,11 +1,11 @@
-import React, {forwardRef, useImperativeHandle, useState} from 'react';
-import {useDispatch} from 'react-redux';
-import {DropDownMenu} from '~components';
-import { persistor } from '~redux';
-import {setIsLoggedIn, setUserMeta} from '~redux/slices/user';
+import React, { forwardRef, useImperativeHandle, useState } from "react";
+import { useDispatch } from "react-redux";
+import { DropDownMenu } from "~components";
 
-const FilterModal = ({onPressFirstBtn,onPressSecondBtn,onPressThirdBtn}, ref) => {
-  const dispatch = useDispatch();
+const FilterModal = (
+  { onPressFirstBtn, onPressSecondBtn, onPressThirdBtn },
+  ref
+) => {
   const [isVisible, setVisible] = useState(false);
   useImperativeHandle(ref, () => ({
     show: function () {
@@ -21,7 +21,7 @@ const FilterModal = ({onPressFirstBtn,onPressSecondBtn,onPressThirdBtn}, ref) =>
       isVisible={isVisible}
       firstBtnText="Today"
       secondBtnText="This Week"
-      thirdText='This Month'
+      thirdText="This Month"
       onPressFirstBtn={onPressFirstBtn}
       onPressSecondBtn={onPressSecondBtn}
       onPressThirdBtn={onPressThirdBtn}

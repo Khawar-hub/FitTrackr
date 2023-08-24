@@ -1,11 +1,12 @@
 import React from "react";
-import { ActivityIndicator, Text, View, Image } from "react-native";
+import { View } from "react-native";
 import styles from "./styles";
 import { SmallText } from "~components/text";
+import FastImage from "react-native-fast-image";
 export default function WorkoutItem({ item }) {
   return (
     <View style={styles.container}>
-      <Image
+      <FastImage
         source={{ uri: item?.image }}
         resizeMode="contain"
         style={styles.image}

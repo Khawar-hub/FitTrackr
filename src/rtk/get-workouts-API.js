@@ -1,22 +1,29 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { url } from "./urls";
 
-export const workOutApi = createApi({
-  reducerPath: "workout",
+export const productsApi = createApi({
+  reducerPath: "productsApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: url
+    baseUrl: url,
   }),
-  tagTypes: ["WorkOut"],
+  tagTypes: ["Products"],
   endpoints: (builder) => ({
-    getWorkOut: builder.query({
+    getProducts: builder.query({
       query: (data) => {
         return {
           url: "products",
           method: "GET",
-          body: data,
+        };
+      },
+    }),
+    getProductDetail: builder.query({
+      query: (data) => {
+        return {
+          url: `products/${data}`,
+          method: "GET",
         };
       },
     }),
   }),
 });
-export const { useGetWorkOutQuery } = workOutApi;
+export const { useGetProductsQuery, useGetProductDetailQuery } = productsApi;

@@ -1,6 +1,11 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { AddWorkout, HomeScreen, WorkOuts } from "~screens/app";
+import {
+  AddWorkout,
+  HomeScreen,
+  ProductDetail,
+  Products,
+} from "~screens/app";
 import Home from "~assets/SVG/home";
 import { AppColors } from "~utils";
 import styles from "./styles";
@@ -18,6 +23,20 @@ const HomeStack = () => {
     >
       <Stack.Screen name={ScreenNames.HOME} component={HomeScreen} />
       <Stack.Screen name={ScreenNames.ADDWORKOUT} component={AddWorkout} />
+    </Stack.Navigator>
+  );
+};
+const ProductStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName={ScreenNames.PRODUCTS}
+      screenOptions={{ header: () => false }}
+    >
+      <Stack.Screen name={ScreenNames.PRODUCTS} component={Products} />
+      <Stack.Screen
+        name={ScreenNames.PRODUCTDETAIL}
+        component={ProductDetail}
+      />
     </Stack.Navigator>
   );
 };
@@ -45,8 +64,8 @@ export function BottomTab() {
           headerShown: false,
           tabBarIcon: ({ color, focused }) => <Directory color={color} />,
         }}
-        name="WorkOuts"
-        component={WorkOuts}
+        name="ProductStack"
+        component={ProductStack}
       />
     </Tab.Navigator>
   );
