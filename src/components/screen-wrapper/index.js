@@ -37,7 +37,7 @@ const ScreenWrapper = ({
           <KeyboardAwareScrollView
             style={[styles.container, {backgroundColor: backgroundColor}]}
             contentContainerStyle={styles.contentContainer}
-            keyboardShouldPersistTaps="handled"
+            keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}>
             {children}
           </KeyboardAwareScrollView>

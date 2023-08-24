@@ -13,3 +13,10 @@ export const SignUpFormValidation = yup.object().shape({
     .oneOf([yup.ref('password'), null], 'Passwords must match')
     
 })
+export const AddWorkoutFormValidation = yup.object().shape({
+    distance: yup.string().required("distance is required."),
+    duration: yup.string().required("Duration is  required"),
+    repititions: yup.string().required("Repetitions is  required"),
+    
+    
+})

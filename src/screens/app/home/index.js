@@ -1,6 +1,6 @@
-import React, {useRef, useState} from 'react';
-import {View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useEffect, useRef, useState } from "react";
+import { FlatList, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
   FilePickerModal,
@@ -8,54 +8,68 @@ import {
   ScreenWrapper,
   SettingModal,
   SmallText,
-} from '~components';
-import Avatar from '~components/avatar';
-import {selectUserMeta} from '~redux/slices/user';
-import styles from './styles';
-import {AppColors, CommonStyles} from '~utils';
-export default function Home() {
+  WorkoutItem,
+} from "~components";
+import Avatar from "~components/avatar";
+import { selectUserMeta } from "~redux/slices/user";
+import styles from "./styles";
+import { AppColors, CommonStyles } from "~utils";
+import ScreenNames from "~routes/routes";
+import { workoutTypes } from "~utils/dummy-data";
+import { db } from "~index";
+import { selectWorkout, setAllWorkout } from "~redux/slices/workouts";
+export default function Home({ navigation }) {
+  const reduxWorkouts = useSelector(selectWorkout);
+  const[loader,setLoader]=useState(false)
   //Ref
-  const showSettingModalRef = useRef();
-  const showImagePickerRef = useRef();
-  //hooks
   const dispatch = useDispatch();
-  const userInfo = useSelector(selectUserMeta);
+  console.log(reduxWorkouts,'====');
+  const showSettingModalRef = useRef();
+
   //States
-  const [profilePicture, setProfilePicture] = useState(null);
-  //useEffects
-  //functions
-  const pictureSelection = value => {
-    setProfilePicture(value);
-  };
+
   //jsx components
+  useEffect(() => {
+    getWorkouts();
+  }, []);
+  const getWorkouts = () => {
+    try {
+      setLoader(true)
+      db.transaction((tx) => {
+        tx.executeSql("SELECT * FROM workouts", [], (_, { rows }) => {
+          // Process the query results and update state
+          setLoader(false)
+          dispatch(setAllWorkout(rows.raw()?.reverse()));
+        });
+      });
+    } catch (e) {
+      setLoader(false)
+      console.log("Error getting workouts");
+    }
+  };
+  const renderWorkouts = ({ item, _ }) => {
+    return <WorkoutItem item={item} />;
+  };
   return (
     <ScreenWrapper statusBarColor={AppColors.primary} barStyle="light-content">
-      <Header>DEVELO IT SOLUTION</Header>
+      <Header
+        onPressAddIcon={() => navigation.navigate(ScreenNames.ADDWORKOUT)}
+        onPressLogout={() => showSettingModalRef?.current?.show()}
+      >
+        WorkOuts
+      </Header>
       <View style={styles.mainViewContainer}>
-        <Avatar
-          source={profilePicture ? {uri: profilePicture?.path} : null}
-          showEdit
-          onPress={() => showImagePickerRef?.current?.show()}
+        <FlatList
+          data={reduxWorkouts}
+          renderItem={renderWorkouts}
+          keyExtractor={(_, index) => index?.toString()}
+          showsVerticalScrollIndicator={false}
+          refreshing={loader}
+          onRefresh={getWorkouts}
         />
-        <View style={CommonStyles.marginTop_4}>
-          <SmallText>{userInfo?.name}</SmallText>
-          <SmallText>{userInfo?.email}</SmallText>
-        </View>
-        <Button
-          variant="secondary"
-          buttonTextColor={AppColors.white}
-          onPress={() => {
-            showSettingModalRef?.current?.show();
-          }}>
-          Settings
-        </Button>
       </View>
 
       <SettingModal ref={showSettingModalRef} />
-      <FilePickerModal
-        ref={showImagePickerRef}
-        onFilesSelected={pictureSelection}
-      />
     </ScreenWrapper>
   );
 }

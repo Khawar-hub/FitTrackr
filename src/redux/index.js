@@ -12,6 +12,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import EncryptedStorage from "react-native-encrypted-storage";
+import { workoutSliceReducer } from "./slices/workouts";
 const persistConfig = {
   key: "root",
   storage: EncryptedStorage,
@@ -20,6 +21,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: userSliceReducer,
   config: configSliceReducer,
+  workout:workoutSliceReducer
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({

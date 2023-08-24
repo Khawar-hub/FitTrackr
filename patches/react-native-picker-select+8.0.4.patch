@@ -1,0 +1,12 @@
+diff --git a/node_modules/react-native-picker-select/src/index.js b/node_modules/react-native-picker-select/src/index.js
+index bcbc93e..04a7d95 100644
+--- a/node_modules/react-native-picker-select/src/index.js
++++ b/node_modules/react-native-picker-select/src/index.js
+@@ -405,6 +405,7 @@ export default class RNPickerSelect extends PureComponent {
+                     value={selectedItem.inputLabel ? selectedItem.inputLabel : selectedItem.label}
+                     ref={this.setInputRef}
+                     editable={false}
++                    placeholder='adasbd'
+                     {...textInputProps}
+                 />
+                 {this.renderIcon()}

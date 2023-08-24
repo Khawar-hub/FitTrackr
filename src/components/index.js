@@ -9,3 +9,5 @@ export {default as SettingModal} from './setting-modal';
 export {default as Avatar} from './avatar';
 export {default as FilePickerModal} from './file-picker-modal';
 export {default as Spacer} from './spacer'
+export {default as Picker} from './picker'
+export {default as WorkoutItem} from './workout-item'

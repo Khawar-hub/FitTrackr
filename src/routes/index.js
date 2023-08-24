@@ -10,6 +10,7 @@ import { Loader } from "~components";
 import SplashScreen from "react-native-splash-screen";
 import { db } from "~index";
 import { store } from "~redux";
+import { BottomTab } from "./bottomTab";
 const Stack = createNativeStackNavigator();
 
 export default function Routes() {
@@ -41,7 +42,7 @@ export default function Routes() {
           initialRouteName={ScreenNames.HOME}
           screenOptions={{ header: () => false }}
         >
-          <Stack.Screen name={ScreenNames.HOME} component={HomeScreen} />
+          <Stack.Screen name={ScreenNames.HOME} component={BottomTab} />
         </Stack.Navigator>
       )}
     </NavigationContainer>
