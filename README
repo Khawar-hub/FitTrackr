@@ -1,0 +1,13 @@
+HOW TO RUN THIS APP:
+
+IOS:
+
+1. Run "yarn" in root of project in terminal
+2. Run "cd ios" to enter into ios folder and run "pod install"
+3. After installing pods run "cd .." to return to root and run "xed ios" to open Xcode
+4. After that you can run app on selected simulator
+
+ANDROID:
+
+1. Run "yarn" in root of project in terminal.
+2. Run "yarn android" in root with device attached and debug mode on on device .
