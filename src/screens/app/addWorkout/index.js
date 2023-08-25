@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import {
   Button,
   FilePickerModal,
@@ -144,58 +144,61 @@ export default function AddWorkout({ navigation }) {
       barStyle="light-content"
     >
       <Header showIcons={false}>Add Workout</Header>
-      <View style={styles.mainViewContainer}>
-        <Avatar
-          source={profilePicture ? { uri: profilePicture?.path } : null}
-          showEdit
-          onPress={() => showImagePickerRef?.current?.show()}
-        />
-        <View style={styles.inputContainer}>
-          <LargeText textAlign="center" size={5}>
-            Add your Workout
-          </LargeText>
-          <Spacer vertical={height(2)} />
-          <Picker
-            returnKeyType="next"
-            onChange={(value) => setType(value)}
-            value={type}
-            label="Workout Type *"
+      <ScrollView>
+        <View style={styles.mainViewContainer}>
+          <Avatar
+            source={profilePicture ? { uri: profilePicture?.path } : null}
+            showEdit
+            onPress={() => showImagePickerRef?.current?.show()}
           />
+          <View style={styles.inputContainer}>
+            <LargeText textAlign="center" size={5}>
+              Add your Workout
+            </LargeText>
+            <Spacer vertical={height(2)} />
+            <Picker
+              returnKeyType="next"
+              onChange={(value) => setType(value)}
+              value={type}
+              label="Workout Type *"
+            />
 
-          <Input
-            control={control}
-            ref={distanceRef}
-            name="distance"
-            keyboardType="numeric"
-            onSubmitEditing={() => durationRef?.current?.focus()}
-            returnKeyType="next"
-            label="Distance *"
-          />
-          <Input
-            ref={durationRef}
-            label={"Duration *"}
-            keyboardType="numeric"
-            onSubmitEditing={() => repititionsRef?.current?.focus()}
-            control={control}
-            name="duration"
-          />
-          <Input
-            ref={repititionsRef}
-            label={"Repititions *"}
-            keyboardType="numeric"
-            control={control}
-            name="repititions"
-          />
+            <Input
+              control={control}
+              ref={distanceRef}
+              name="distance"
+              keyboardType="numeric"
+              onSubmitEditing={() => durationRef?.current?.focus()}
+              returnKeyType="next"
+              label="Distance *"
+            />
+            <Input
+              ref={durationRef}
+              label={"Duration *"}
+              keyboardType="numeric"
+              onSubmitEditing={() => repititionsRef?.current?.focus()}
+              control={control}
+              returnKeyType="next"
+              name="duration"
+            />
+            <Input
+              ref={repititionsRef}
+              label={"Repititions *"}
+              keyboardType="numeric"
+              control={control}
+              name="repititions"
+            />
+          </View>
+          <Button
+            disabled={!isValid}
+            buttonTextColor={AppColors.white}
+            withShadow
+            onPress={handleSubmit(addWorkout)}
+          >
+            Add Workout
+          </Button>
         </View>
-        <Button
-          disabled={!isValid}
-          buttonTextColor={AppColors.white}
-          withShadow
-          onPress={handleSubmit(addWorkout)}
-        >
-          Add Workout
-        </Button>
-      </View>
+      </ScrollView>
 
       <SettingModal ref={showSettingModalRef} />
       <FilePickerModal

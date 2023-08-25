@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import {View } from "react-native";
+import { View } from "react-native";
 import { useDispatch } from "react-redux";
 import {
   Button,
@@ -14,6 +14,7 @@ import {
 } from "~components";
 import { setIsLoggedIn, setUserMeta } from "~redux/slices/user";
 import { AppColors } from "~utils";
+import BcryptReactNative from "bcrypt-react-native";
 import { height } from "~utils/dimensions";
 import styles from "./styles";
 import LoginFormValidation from "./valdiation";
@@ -32,25 +33,27 @@ export default function Login({ navigation }) {
     mode: "all",
     resolver: yupResolver(LoginFormValidation),
   });
+
   const loginHandler = async (data) => {
     try {
       db.transaction((tx) => {
         tx.executeSql(
           "SELECT * FROM users WHERE email = ?;",
           [data?.email],
-          (_, resultSet) => {
+          async (_, resultSet) => {
             const user = resultSet.rows.item(0);
-            console.log(user);
+
             if (user) {
               const storedEncodedPassword = user?.encrypted_password; // Replace with the actual field name
 
               // Decode the stored encoded password
-              const decodedStoredPassword = Base64.decode(
+              const isSame = await BcryptReactNative.compareSync(
+                data?.password,
                 storedEncodedPassword
               );
 
               // Compare the decoded stored password with the entered password
-              if (data?.password === decodedStoredPassword) {
+              if (isSame) {
                 // Password matches, user is logged in
                 // Set a logged-in state and navigate the user
                 console.log("Logged in successfully.");

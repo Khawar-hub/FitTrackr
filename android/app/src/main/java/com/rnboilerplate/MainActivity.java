@@ -9,11 +9,7 @@ import org.devio.rn.splashscreen.SplashScreen;
 public class MainActivity extends ReactActivity {
 
 
- @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(null);
-    SplashScreen.show(this); // Add this line
-  }
+
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
    * rendering of the component.
@@ -38,5 +34,13 @@ public class MainActivity extends ReactActivity {
         // If you opted-in for the New Architecture, we enable Concurrent React (i.e. React 18).
         DefaultNewArchitectureEntryPoint.getConcurrentReactEnabled() // concurrentRootEnabled
         );
+  }
+
+   @Override
+  protected void onCreate(Bundle savedInstanceState) {
+     SplashScreen.show(this); // Add this line
+    super.onCreate(null);
+    
+   
   }
 }

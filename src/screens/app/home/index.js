@@ -2,22 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { FlatList, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  Button,
-  FilePickerModal,
   FilterModal,
   Header,
+  LargeText,
   ScreenWrapper,
   SettingModal,
-  SmallText,
   UnderLineText,
   WorkoutItem,
 } from "~components";
-import Avatar from "~components/avatar";
-import { selectUserMeta } from "~redux/slices/user";
 import styles from "./styles";
-import { AppColors, CommonStyles } from "~utils";
+import { AppColors } from "~utils";
 import ScreenNames from "~routes/routes";
-import { workoutTypes } from "~utils/dummy-data";
 import { db } from "~index";
 import { selectWorkout, setAllWorkout } from "~redux/slices/workouts";
 import moment from "moment";
@@ -34,17 +29,12 @@ export default function Home({ navigation }) {
   }, []);
   const getWorkouts = () => {
     try {
-      setLoader(true);
       db.transaction((tx) => {
         tx.executeSql("SELECT * FROM workouts", [], (_, { rows }) => {
-          // Process the query results and update state
-          setLoader(false);
-      
-          dispatch(setAllWorkout(rows.raw()));
+          dispatch(setAllWorkout(rows?._array));
         });
       });
     } catch (e) {
-      setLoader(false);
       console.log("Error getting workouts");
     }
   };
@@ -103,6 +93,11 @@ export default function Home({ navigation }) {
           keyExtractor={(_, index) => index?.toString()}
           showsVerticalScrollIndicator={false}
           refreshing={loader}
+          ListEmptyComponent={() => {
+            return (
+              <LargeText textAlign="center">No Workouts to show!</LargeText>
+            );
+          }}
           onRefresh={getWorkouts}
         />
       </View>

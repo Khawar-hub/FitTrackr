@@ -4,7 +4,7 @@ import {Provider} from 'react-redux';
 import {persistor, store} from './redux/index';
 import FlashMessage from 'react-native-flash-message';
 import {LogBox} from 'react-native';
-import SQLite from 'react-native-sqlite-storage';
+import SQLite from 'react-native-sqlite-2';
 import Toast from "react-native-toast-message";
 import { PersistGate } from 'redux-persist/integration/react';
 export  const db = SQLite.openDatabase({ name: 'mydb.db', location: 'default', key: 'encryptionKey',

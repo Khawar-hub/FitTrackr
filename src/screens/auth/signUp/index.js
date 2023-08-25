@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import {
   Button,
   Input,
@@ -13,13 +13,14 @@ import {
 import { AppColors } from "~utils";
 import { height } from "~utils/dimensions";
 import styles from "./styles";
-import LoginFormValidation, { SignUpFormValidation } from "./valdiation";
+import { SignUpFormValidation } from "./valdiation";
 import ScreenNames from "~routes/routes";
-import { Base64 } from "js-base64";
+import BcryptReactNative from "bcrypt-react-native";
 import { db } from "~index";
 import { showToast } from "~utils/method";
 export default function SignUp({ navigation }) {
   const passwordRef = useRef();
+  const confirmpasswordRef = useRef();
   const emailRef = useRef();
   const {
     control,
@@ -45,6 +46,7 @@ export default function SignUp({ navigation }) {
           },
           (_, error) => {
             reject(error);
+            console.log(error);
           }
         );
       });
@@ -66,7 +68,6 @@ export default function SignUp({ navigation }) {
   };
 
   const signupHandler = async (data) => {
-    console.log(data);
     // dispatch(setIsLoggedIn(true));
     try {
       const tableExists = await checkIfTableExists();
@@ -74,12 +75,12 @@ export default function SignUp({ navigation }) {
         createTableUsers();
       }
       // Hash the password using bcrypt before storing
-      const encrypted_password = Base64.encode(data?.password);
-
+      const salt = await BcryptReactNative.getSalt(10);
+      const hash = await BcryptReactNative.hash(salt, data?.password);
       db.transaction((tx) => {
         tx.executeSql(
           "INSERT INTO users (name, email, encrypted_password) VALUES (?, ?, ?);",
-          [data?.name, data?.email, encrypted_password],
+          [data?.name, data?.email, hash],
           (_, resultSet) => {
             // Handle success
             console.log("User signed up successfully.");
@@ -104,63 +105,68 @@ export default function SignUp({ navigation }) {
       barStyle={"light-content"}
       scrollEnabled
     >
-      <View style={styles.mainViewContainer}>
-        <LargeText textStyles={styles.heading}>FitTrackr</LargeText>
+      <ScrollView>
+        <View style={styles.mainViewContainer}>
+          <LargeText textStyles={styles.heading}>FitTrackr</LargeText>
 
-        <View style={styles.inputContainer}>
-          <LargeText textAlign="center" size={5}>
-            Create your account
-          </LargeText>
+          <View style={styles.inputContainer}>
+            <LargeText textAlign="center" size={5}>
+              Create your account
+            </LargeText>
+            <Spacer vertical={height(2)} />
+            <Input
+              control={control}
+              name="name"
+              onSubmitEditing={() => emailRef?.current?.focus()}
+              returnKeyType="next"
+              label="Name"
+            />
+            <Input
+              control={control}
+              ref={emailRef}
+              name="email"
+              keyboardType={"email-address"}
+              onSubmitEditing={() => passwordRef?.current?.focus()}
+              returnKeyType="next"
+              label="Email"
+            />
+            <Input
+              ref={passwordRef}
+              label={"Password"}
+              onSubmitEditing={() => confirmpasswordRef?.current?.focus()}
+              control={control}
+              returnKeyType="next"
+              name="password"
+              secureTextEntry
+            />
+            <Input
+              ref={confirmpasswordRef}
+              label={"Confirm Password"}
+              control={control}
+              name="confirmpassword"
+              secureTextEntry
+            />
+            <UnderLineText
+              onPress={() => navigation.navigate(ScreenNames.LOGIN)}
+              color={AppColors.black}
+              size={3.4}
+              textAlign={"right"}
+            >
+              Login
+            </UnderLineText>
+          </View>
+
           <Spacer vertical={height(2)} />
-          <Input
-            control={control}
-            name="name"
-            onSubmitEditing={() => emailRef?.current?.focus()}
-            returnKeyType="next"
-            label="Name"
-          />
-          <Input
-            control={control}
-            ref={emailRef}
-            name="email"
-            keyboardType={"email-address"}
-            onSubmitEditing={() => passwordRef?.current?.focus()}
-            returnKeyType="next"
-            label="Email"
-          />
-          <Input
-            ref={passwordRef}
-            label={"Password"}
-            control={control}
-            name="password"
-            secureTextEntry
-          />
-          <Input
-            ref={passwordRef}
-            label={"Confirm Password"}
-            control={control}
-            name="confirmpassword"
-            secureTextEntry
-          />
-          <UnderLineText
-            onPress={() => navigation.navigate(ScreenNames.LOGIN)}
-            color={AppColors.black}
-            size={3.4}
-            textAlign={"right"}
+          <Button
+            disabled={!isValid}
+            buttonTextColor={AppColors.white}
+            withShadow
+            onPress={handleSubmit(signupHandler)}
           >
-            Login
-          </UnderLineText>
+            Sign Up
+          </Button>
         </View>
-        <Spacer vertical={height(2)} />
-        <Button
-          disabled={!isValid}
-          buttonTextColor={AppColors.white}
-          withShadow
-          onPress={handleSubmit(signupHandler)}
-        >
-          Sign Up
-        </Button>
-      </View>
+      </ScrollView>
     </ScreenWrapper>
   );
 }
